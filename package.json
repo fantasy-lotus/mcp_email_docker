@@ -16,9 +16,11 @@
     "zod": "^3.24.3"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.149",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.1",
-    "@types/nodemailer": "^6.4.17"
+    "@types/nodemailer": "^6.4.17",
+    "esbuild": "^0.25.3"
   }
 }

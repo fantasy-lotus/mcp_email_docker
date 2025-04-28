@@ -12,6 +12,6 @@
     "resolveJsonModule": true,     // 允许导入 JSON 文件
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "my-sam-app/src/tool", "my-sam-app/src/mcp"],
   "exclude": ["node_modules", "**/*.test.ts"]
 }
