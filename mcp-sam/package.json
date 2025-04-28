@@ -1,0 +1,23 @@
+{
+  "name": "my-sam-app",
+  "version": "1.0.0",
+  "description": "A simple AWS SAM application",
+  "main": "src/server.ts",
+  "scripts": {
+    "build": "tsc",
+    "deploy": "sam deploy",
+    "test": "jest"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1000.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.0",
+    "jest": "^26.0.0",
+    "@types/jest": "^26.0.0",
+    "@types/aws-lambda": "^8.10.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
