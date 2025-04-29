@@ -1,6 +1,7 @@
 # mcp-email-docker
 
 基于 [Model Context Protocol (MCP)](https://github.com/modelcontext/modelcontextprotocol) 的邮件通知服务，支持通过Streamable HTTP， SSE（Server-Sent Events）与客户端通信，并通过 SMTP 服务发送通知邮件。已支持 Docker 镜像部署。
+本项目也适合作为新手上手学习MCP Server的学习项目
 
 ---
 
@@ -9,7 +10,7 @@
 - 支持接入MCP Client通过 MCP 协议发送邮件或其他通知
 - ⭐️ 兼容旧SSE和新Streamable HTTP协议
 - ⭐️ 支持 Docker 一键部署到remote or local，通过Http而不是Stdio通信
-  - Dockerfile使用多阶段构建以及slim node环境降低image打包大小
+  - Dockerfile使用多阶段构建以及slim nodejs环境降低image打包大小
 
 ---
 
