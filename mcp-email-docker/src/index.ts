@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from "express";
 import notifyServer from "./mcp/notify";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import cors from "cors";
-import { InitializeRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+
 const server = notifyServer;
 // Create Express application
 const app = express();
@@ -16,6 +16,14 @@ app.use(
   })
 );
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// 在请求入口添加日志中间件
+app.use((req, res, next) => {
+  console.info(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 
 // Set up routes
 app.post("/mcp", async (req, res) => {
@@ -45,41 +53,63 @@ app.post("/mcp", async (req, res) => {
 // 存储活跃连接
 const transports = {
   streamable: {} as Record<string, StreamableHTTPServerTransport>,
-  sse: {} as Record<string, SSEServerTransport>
+  sse: {} as Record<string, SSEServerTransport>,
 };
 
-
-app.get('/sse', async (req, res) => {
-  console.log("Received SSE request:", req.query);
+app.get("/sse", async (req, res) => {
+  console.info(`[${new Date().toISOString()}] [INFO] Received SSE message:`, {
+    method: req.method,
+    url: req.url,
+    query: req.query,
+    body: req.body,
+    headers: req.headers,
+  });
   // Create SSE transport for legacy clients
-  const transport = new SSEServerTransport('/messages', res);
+  const transport = new SSEServerTransport("/messages", res);
   transports.sse[transport.sessionId] = transport;
-  
+
+  await server.connect(transport);
   res.on("close", () => {
     delete transports.sse[transport.sessionId];
   });
-  
-  await server.connect(transport);
 });
 
 // Legacy message endpoint for older clients
-app.post('/messages', async (req, res) => {
-  console.log("Received legacy message:", req.body);
+app.post("/messages", async (req, res) => {
+  console.info(
+    `[${new Date().toISOString()}] [INFO] Received legacy message:`,
+    {
+      method: req.method,
+      url: req.url,
+      query: req.query,
+      body: req.body,
+      headers: req.headers,
+    }
+  );
   const sessionId = req.query.sessionId as string;
   const transport = transports.sse[sessionId];
   if (transport) {
     await transport.handlePostMessage(req, res, req.body);
   } else {
-    res.status(400).send('No transport found for sessionId');
+    res.status(400).send("No transport found for sessionId");
   }
 });
 
 // 错误处理
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(`[${new Date().toISOString()}] 未处理的异常:`, err);
-  res.status(500).json({ error: "服务器内部错误" });
+  console.error(
+    `[${new Date().toISOString()}] [ERROR] ${req.method} ${req.url} -`,
+    err.stack || err.message
+  );
+  res.status(500).json({
+    jsonrpc: "2.0",
+    error: {
+      code: -32603,
+      message: "Internal server error",
+    },
+    id: null,
+  });
 });
-
 
 app.get("/mcp", async (req, res) => {
   res.writeHead(405).end(
@@ -94,9 +124,8 @@ app.get("/mcp", async (req, res) => {
   );
 });
 
-
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-      console.log(`MCP Server listening on port ${PORT}`);
-    });
+  console.info(`MCP Server listening on port ${PORT}`);
+});

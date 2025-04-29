@@ -1,5 +1,5 @@
 {
-  "name": "mcp",
+  "name": "mcp-email-docker",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
@@ -7,7 +7,8 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/server/index.ts"
+    "start": "node dist/index.js",
+    "build": "tsc"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.10.2",
@@ -16,11 +17,10 @@
     "zod": "^3.24.3"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.149",
+    "typescript": "^5.8.2",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.1",
-    "@types/nodemailer": "^6.4.17",
-    "esbuild": "^0.25.3"
+    "@types/nodemailer": "^6.4.17"
   }
 }
