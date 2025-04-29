@@ -1,58 +1,99 @@
-# MCP 邮件通知服务
+# mcp-email-docker
 
-本项目基于 [Model Context Protocol (MCP)](https://github.com/modelcontext/modelcontextprotocol) 实现了一个简单的邮件通知服务，支持通过 SSE（Server-Sent Events）与客户端通信，并通过 QQ 邮箱发送通知邮件。
+基于 [Model Context Protocol (MCP)](https://github.com/modelcontext/modelcontextprotocol) 的邮件通知服务，支持通过 SSE（Server-Sent Events）与客户端通信，并通过 QQ 邮箱等 SMTP 服务发送通知邮件。已支持 Docker 镜像部署。
+
+---
 
 ## 功能特性
 
 - 提供 SSE 实时消息推送接口
 - 支持通过 MCP 协议发送邮件通知
 - 健康检查接口
+- 支持 Docker 一键部署
 - 支持优雅关闭所有连接
+
+---
 
 ## 目录结构
 
 ```
 .
-├── .env                # 环境变量配置
 ├── package.json        # 项目依赖与脚本
+├── Dockerfile          # Docker 镜像构建文件
+├── tsconfig.json       # TypeScript 配置
 ├── src/
 │   ├── index.ts        # 服务器入口
 │   ├── mcp/
 │   │   └── notify.ts   # MCP 通知服务实现
 │   └── tool/
 │       └── notify.ts   # 邮件发送工具
-└── tsconfig.json       # TypeScript 配置
+└── .env.example        # 环境变量示例
 ```
+
+---
 
 ## 快速开始
 
-1. **安装依赖**
+### 1. 安装依赖
 
-   ```sh
-   npm install
-   ```
+```sh
+npm install
+```
 
-2. **配置环境变量**
+### 2. 配置环境变量
 
-   在项目根目录下创建 `.env` 文件，内容示例：
+在项目根目录下创建 `.env` 文件，内容示例：
 
-   ```
-   SMTP_USER=你的QQ邮箱
-   SMTP_PASS=你的QQ邮箱SMTP授权码
-   ```
+```
+SMTP_USER=你的邮箱账号
+SMTP_PASS=你的邮箱SMTP授权码
+SMTP_SERVICE=
+SMTP_HOST
+PORT=
+```
 
-3. **启动服务**
+### 3. 本地开发启动
 
-   ```sh
-   npx ts-node src/index.ts
-   ```
+```sh
+npm run build
+npm start
+```
 
-   默认监听端口为 `8721`，可通过环境变量 `PORT` 修改。
+或直接用 ts-node：
 
+```sh
+npx ts-node src/index.ts
+```
+
+---
+
+## Docker 部署
+
+### 1. 构建镜像
+
+```sh
+docker build -t yourname/mcp-email-docker .
+```
+
+### 2. 运行容器
+
+```sh
+docker run -p 8080:8080 \
+  -e SMTP_USER=你的邮箱账号 \
+  -e SMTP_PASS=你的邮箱SMTP授权码 \
+  -e SMTP_SERVICE=QQ \
+  -e SMTP_HOST=smtp.qq.com \
+  yourname/mcp-email-docker
+```
+
+或使用 `.env` 文件：
+
+```sh
+docker run --env-file .env -p 8080:8080 yourname/mcp-email-docker
+```
+
+---
 ## API 说明
-
-- `GET /health`  
-  健康检查接口，返回服务状态。
 
 - `GET /sse`  
   建立 SSE 连接，用于实时消息推送。
@@ -60,13 +101,18 @@
 - `POST /messages?sessionId=xxx`  
   客户端发送消息接口，需携带 `sessionId`。
 
-## MCP 工具：notify
+- `POST /mcp`  
+  通过 MCP 协议发送邮件通知。
 
-- **方法**：`notify`
-- **参数**：
-  - `method`：通知方式，目前仅支持 `"email"`
-  - `to`：收件人邮箱
-  - `content`：邮件内容
+---
+
+## MCP 邮件通知参数
+
+- `method`：通知方式，目前仅支持 `"email"`
+- `to`：收件人邮箱
+- `content`：邮件内容
+
+---
 
 ## 依赖
 
@@ -74,7 +120,10 @@
 - [nodemailer](https://nodemailer.com/about/)
 - [zod](https://zod.dev/)
 - [dotenv](https://github.com/motdotla/dotenv)
+- [express](https://expressjs.com/)
 
-## 许可协议
+---
+
+## License
 
 MIT
