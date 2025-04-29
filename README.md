@@ -1,16 +1,14 @@
 # mcp-email-docker
 
-基于 [Model Context Protocol (MCP)](https://github.com/modelcontext/modelcontextprotocol) 的邮件通知服务，支持通过 SSE（Server-Sent Events）与客户端通信，并通过 QQ 邮箱等 SMTP 服务发送通知邮件。已支持 Docker 镜像部署。
+基于 [Model Context Protocol (MCP)](https://github.com/modelcontext/modelcontextprotocol) 的邮件通知服务，支持通过Streamable HTTP， SSE（Server-Sent Events）与客户端通信，并通过 SMTP 服务发送通知邮件。已支持 Docker 镜像部署。
 
 ---
 
 ## 功能特性
 
-- 提供 SSE 实时消息推送接口
-- 支持通过 MCP 协议发送邮件通知
-- 健康检查接口
-- 支持 Docker 一键部署
-- 支持优雅关闭所有连接
+- 支持通过 MCP 协议发送邮件或其他通知
+- 兼容旧SSE和新Streamable HTTP协议
+- 支持 Docker 一键部署到remote or local，通过Http而不是Stdio通信
 
 ---
 
@@ -102,13 +100,13 @@ docker run --env-file .env -p 8080:8080 yourname/mcp-email-docker
   客户端发送消息接口，需携带 `sessionId`。
 
 - `POST /mcp`  
-  通过 MCP 协议发送邮件通知。
+  通过 Streamable HTTP协议连接mcp server
 
 ---
 
 ## MCP 邮件通知参数
 
-- `method`：通知方式，目前仅支持 `"email"`
+- `method`：通知方式，目前仅基于nodemailer实现 `"email"`
 - `to`：收件人邮箱
 - `content`：邮件内容
 
