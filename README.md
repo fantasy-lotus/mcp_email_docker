@@ -6,9 +6,10 @@
 
 ## 功能特性
 
-- 支持通过 MCP 协议发送邮件或其他通知
-- 兼容旧SSE和新Streamable HTTP协议
-- 支持 Docker 一键部署到remote or local，通过Http而不是Stdio通信
+- 支持接入MCP Client通过 MCP 协议发送邮件或其他通知
+- ⭐️ 兼容旧SSE和新Streamable HTTP协议
+- ⭐️ 支持 Docker 一键部署到remote or local，通过Http而不是Stdio通信
+  - Dockerfile使用多阶段构建以及slim node环境降低image打包大小
 
 ---
 
@@ -18,6 +19,7 @@
 .
 ├── package.json        # 项目依赖与脚本
 ├── Dockerfile          # Docker 镜像构建文件
+├──.dockerignore        # Docker build忽略设置
 ├── tsconfig.json       # TypeScript 配置
 ├── src/
 │   ├── index.ts        # 服务器入口
