@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/fantasy-lotus-mcp-email-docker-badge.png)](https://mseep.ai/app/fantasy-lotus-mcp-email-docker)
+
 # mcp-email-docker
 
 基于 [Model Context Protocol (MCP)](https://github.com/modelcontext/modelcontextprotocol) 的邮件通知服务，支持通过Streamable HTTP， SSE（Server-Sent Events）与客户端通信，并通过 SMTP 服务发送通知邮件。已支持 Docker 镜像部署。
